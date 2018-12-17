@@ -1,0 +1,24 @@
+{
+	"name" : "limanweb/pg-ext",
+	"description" : "Laravel extensions to work with Postgresql table native field-types",
+	"keywords" : [
+		"laravel",
+		"postgresql"
+	],
+	"type" : "package",
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "Ilya Khondozhko",
+			"email" : "limanweb@mail.ru"
+		}
+	],
+	"require" : {
+		"php" : ">=7.2.0"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"Limanweb\\PgExt\\" : "src"
+		}
+	},
+	"minimum-stability" : "dev"
+}
