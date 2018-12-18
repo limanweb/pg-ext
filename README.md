@@ -17,13 +17,17 @@ composer require "limanweb/pg-ext"
 ```
 ## Package contents
 
-* **Models\Concerns\PgTypeCastable** - cast some PostgreSQL native types for model
-* **Models\Concerns\HasArrayRelationships** - additional relations for model
-* **Models\Model** - The abstract model that used PgTypeCastable & HasArrayRelationships traits
-* **Relations\ArrayRelations** - base abstract class for array-field relations
-* **Relations\HasManyInArray** - HasManyInArray relation class
-* **Relations\BelongsToManyArrays** - BelongsToManyArrays relation class
-* **Support\PgHelper** - PostgreSQL native type convertion helper
+* **Models**\
+  * **Concerns**\
+    * **PgTypeCastable** - cast some PostgreSQL native types for model
+    * **HasArrayRelationships** - additional relations for model
+  * **Model** - The abstract model that used PgTypeCastable & HasArrayRelationships traits
+* **Relations**\
+  * **ArrayRelations** - base abstract class for array-field relations
+  * **HasManyInArray** - HasManyInArray relation class
+  * **BelongsToManyArrays** - BelongsToManyArrays relation class
+* **Support**\
+  * **PgHelper** - PostgreSQL native type convertion helper
 
 ## Using extended casting
 
@@ -83,8 +87,10 @@ or inherite your model from ```Limanweb\PgExt\Models\Model``` to default using e
 ### What many-to-many relation trough array-field
 
 For example, you have two tables posts and tags. Every post can have many tags and every tag can be associated with many posts. 
-You can add a column 'tag_ids' of native PostgreSQL type 'int[]' (array of integer) into 'posts' table.
-Now, you can use this field to collect ID-s of tag associated with post.
+You can add a column 'tag_ids' of native PostgreSQL type 'INTEGER[]' (array of integer) into 'posts' table.
+Now, you can use this field to specify ID-s of tagd associated with post.
+
+Notes: Don't forget to create GIN-index on 'tag_ids' field. 
 
 Using the hasManyInArray and the belongsToManyArrays relationships allows you to access related models.
 See examples below.
