@@ -80,23 +80,35 @@ class YourModel extends Model
 ```
 or inherite your model from ```Limanweb\PgExt\Models\Model``` to default using extended casting and relationships.
 
+### What many-to-many relation trough array-field
+
+For example, you have two tables posts and tags. Every post can have many tags and every tag can be associated with many posts. 
+You can add a column 'tag_ids' of native PostgreSQL type 'int[]' (array of integer) into 'posts' table.
+Now, you can use this field to collect ID-s of tag associated with post.
+
+Using the hasManyInArray and the belongsToManyArrays relationships allows you to access related models.
+See examples below.
+
 ### hasManyInArray relation
 
 ```php
 use Limanweb\PgExt\Models\Model;
 
-class Language extends Model {
+class Post extends Model {
 
 	protected $casts = [
 		'name' => 'string',
-		'country_ids' => 'pg_array', 	// this is array of integer PostgreSQL field
+		'tag_ids' => 'pg_array', 	// this is array of integer PostgreSQL field
 						// in SQL is "country_is INTEGER[],"
 	];
 
 	// Your model implementation
 
-	public function countries() {
-		return $this->hasManyInArray(Country::class, 'country_ids', 'id');
+	/**
+	 * @return Limanweb\PgExt\Relations\HasManyInArray
+	 */
+	public function tags() {
+		return $this->hasManyInArray(Tag::class, 'tag_ids', 'id');
 	}
 }	
 ```
@@ -106,7 +118,7 @@ class Language extends Model {
 ```php
 use Limanweb\PgExt\Models\Model;
 
-class Country extends Model {
+class Tag extends Model {
 
 	protected $casts = [
 		'name' => 'string',
@@ -114,8 +126,11 @@ class Country extends Model {
 
 	// Your model implementation
 
-	public function countries() {
-		return $this->belongsToManyArrays(Language::class, 'country_ids', 'id');
+	/**
+	 * @return Limanweb\PgExt\Relations\BelongsToManyArrays
+	 */
+	public function posts() {
+		return $this->belongsToManyArrays(Post::class, 'tag_ids', 'id');
 	}
 }	
 ```
