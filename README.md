@@ -3,7 +3,7 @@ Extending the laravel to work with PostgreSQL tables
 
 ### Provides
 
-* additional casting tipes for some native PostgreSQL types
+* additional casting types for the some native PostgreSQL types
 * additional many-to-many relations with using of specific PostgreSQL array-type fields
 
 ### Anounced (in developing)
@@ -44,7 +44,7 @@ class YourModel extends Model
 	// Your model implementation
 }	
 ```
-or inherite your model from ```Limanweb\PgExt\Models\Model``` to default using extended casting.
+or inherite your model from ```Limanweb\PgExt\Models\Model``` to use extended casting by default.
 ```php
 use Limanweb\PgExt\Models\Model;
 
@@ -82,13 +82,13 @@ class YourModel extends Model
 	// Your model implementation
 }	
 ```
-or inherite your model from ```Limanweb\PgExt\Models\Model``` to default using extended casting and relationships.
+or inherite your model from ```Limanweb\PgExt\Models\Model``` to use extended casting and relationships by default.
 
 ### What many-to-many relation trough array-field
 
-For example, you have two tables posts and tags. Every post can have many tags and every tag can be associated with many posts. 
+For example, you have two tables: posts and tags. Every post can have many tags, and every tag can be associated with many posts. 
 You can add a column 'tag_ids' of native PostgreSQL type 'INTEGER[]' (array of integer) into 'posts' table.
-Now, you can use this field to specify ID-s of tagd associated with post.
+Now, you can use this field to specify ID-s of tags associated with post.
 
 Notes: Don't forget to create GIN-index on 'tag_ids' field. 
 
