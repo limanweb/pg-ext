@@ -91,7 +91,6 @@ class BelongsToManyArrays extends ArrayRelation
 
         foreach ($models as $model) {
             $key = $model->getAttribute($this->relatedKey);
-            echo 'region '.$key.PHP_EOL;
 
             $relatedItems = $dictionary[$model->getAttribute($this->relatedKey)] ?? [];
             $model->setRelation(
@@ -112,7 +111,7 @@ class BelongsToManyArrays extends ArrayRelation
     {
         // Check for parent model relatedKey exists in child model arrayField
         return $query->select($columns)->whereRaw(
-            "{$this->query->qualifyColumn($this->arrayField)}{$this->getCastAs()} @> ARRAY[{$this->parent->qualifyColumn($this->relatedKey)}{$this->getCastAs()}]"
+            "{$this->query->qualifyColumn($this->arrayField)}{$this->getCastAs(true)} @> ARRAY[{$this->parent->qualifyColumn($this->relatedKey)}{$this->getCastAs()}]"
         );
     }
 
