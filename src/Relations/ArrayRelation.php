@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Limanweb\PgExt\Relations;
 
@@ -15,14 +15,16 @@ abstract class ArrayRelation extends Relation
      * @var string
      */
     protected $arrayField;
-    
+
     /**
      * [Description] TODO
      *
      * @var string
      */
     protected $relatedKey;
-    
+
+    protected $castAs;
+
     /**
      * Constructor
      *
@@ -30,15 +32,17 @@ abstract class ArrayRelation extends Relation
      * @param Model $related
      * @param null|string $arrayField
      * @param null|string $relatedKey
+     * @param null|string $castAs
      */
-    public function __construct(Builder $query, Model $parent, $arrayField, $relatedKey)
+    public function __construct(Builder $query, Model $parent, $arrayField, $relatedKey, $castAs = null)
     {
         $this->arrayField = $arrayField;
         $this->relatedKey = $relatedKey;
-        
+        $this->castAs = $castAs;
+
         parent::__construct($query, $parent);
     }
-    
+
     /**
      * Initialize the relation on a set of models.
      *
@@ -48,14 +52,14 @@ abstract class ArrayRelation extends Relation
      */
     public function initRelation(array $models, $relation)
     {
-        
+
         foreach ($models as $model) {
             $model->setRelation($relation, $this->related->newCollection());
         }
-        
+
         return $models;
     }
-    
+
     /**
      * Get the results of the relationship.
      *
@@ -65,8 +69,16 @@ abstract class ArrayRelation extends Relation
     {
         return $this->get();
     }
-    
-    
+
+    protected function getCastAs($isArray = false)
+    {
+        if (is_null($this->castAs)) {
+            return "";
+        }
+
+        return "::{$this->castAs}" . ($isArray ? "[]" : "");
+    }
+
 }
 
 ?>

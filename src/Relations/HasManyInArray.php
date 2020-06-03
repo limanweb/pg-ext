@@ -8,7 +8,7 @@ use Limanweb\PgExt\Support\PgHelper;
 
 class HasManyInArray extends ArrayRelation
 {
-    
+
     /**
      * Set the base constraints on the relation query.
      *
@@ -17,13 +17,13 @@ class HasManyInArray extends ArrayRelation
     public function addConstraints()
     {
         if (static::$constraints) {
-            
+
             $arrayFieldValues = PgHelper::toPgArray($this->parent->{$this->arrayField});
             $this->query->whereRaw("ARRAY[{$this->query->qualifyColumn($this->relatedKey)}] <@ '{$arrayFieldValues}'");
-            
+
         }
     }
-    
+
     /**
      * Get all of the foreign keys for an array of models.
      *
@@ -39,10 +39,10 @@ class HasManyInArray extends ArrayRelation
                 $keys = array_merge($keys, $arrayFieldValue);
             }
         });
-            
+
         return array_unique($keys);
     }
-    
+
     /**
      * Set the constraints for an eager load of the relation.
      *
@@ -54,23 +54,23 @@ class HasManyInArray extends ArrayRelation
         $this->query->whereIn(
             $this->query->qualifyColumn($this->relatedKey), $this->getRelatedKeys($models, $this->arrayField)
         );
-        
+
     }
-    
+
     /**
      * [Description] TODO
      */
     protected function buildDictionary(Collection $results)
     {
         $dictionary = [];
-        
+
         foreach ($results as $result) {
             $dictionary[$result->{$this->relatedKey}] = $result;
         }
-        
+
         return $dictionary;
     }
-    
+
     /**
      * Match the eagerly loaded results to their parents.
      *
@@ -82,23 +82,23 @@ class HasManyInArray extends ArrayRelation
     public function match(array $models, Collection $results, $relation)
     {
         $dictionary = $this->buildDictionary($results);
-        
+
         foreach ($models as $model) {
             $keys = $model->getAttribute($this->arrayField);
             $relatedItems = null;
             if (!empty($keys)) {
                 $relatedItems = array_values(array_intersect_key($dictionary, array_flip($keys)));
-                
+
             }
             $model->setRelation(
                 $relation,
                 empty($relatedItems) ? null : $this->related->newCollection($relatedItems)
                 );
         }
-        
+
         return $models;
     }
-    
+
     /**
      * [Description] TODO
      */
@@ -106,11 +106,11 @@ class HasManyInArray extends ArrayRelation
     {
         // Check for parent model arrayField has an child model relatedKey value
         return $query->select($columns)->whereRaw(
-            "{$this->parent->qualifyColumn($this->arrayField)} @> ARRAY[{$this->query->qualifyColumn($this->relatedKey)}]"
+            "{$this->parent->qualifyColumn($this->arrayField)}{$this->getCastAs(true)} @> ARRAY[{$this->query->qualifyColumn($this->relatedKey)}{$this->getCastAs()}]"
         );
 
     }
-    
+
     /**
      * Attach a model to the parent.
      *
@@ -130,11 +130,11 @@ class HasManyInArray extends ArrayRelation
             $val = array_merge($val, $ids);
             $this->parent->setAttribute($this->arrayField, array_values($val))->save();
         }
-        
+
         return null;
-        
+
     }
-    
+
     /**
      * Detach models from the relationship.
      *
@@ -156,9 +156,9 @@ class HasManyInArray extends ArrayRelation
         }
 
         return null;
-        
+
     }
-    
+
     /**
      * Toggles a model (or models) from the parent.
      *
@@ -178,21 +178,21 @@ class HasManyInArray extends ArrayRelation
 //         $val = $this->parent->{$this->arrayField} ?? [];
 //         if (!is_array($ids)) {
 //             $ids = [$ids];
-//         } 
-            
+//         }
+
 //         $changes['attached'] = array_diff($ids, $val);
 //         $changes['detached'] = array_intersect($ids, $val);
 
 //         $val = array_merge($val, $changes['attached']);
 //         $val = array_diff($val, $changes['detached']);
-        
+
 //         $this->parent->setAttribute($this->arrayField, array_values($val))->save();
 
 //         return null;
-        
+
 //     }
-    
-    
+
+
 }
 
 ?>
