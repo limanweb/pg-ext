@@ -27,7 +27,6 @@ class HasManyInArray extends ArrayRelation
                 throw new \RuntimeException("Can't cast field value");
             }
 
-            $arrayFieldValues = PgHelper::toPgArray($this->parent->{$this->arrayField});
             $this->query->whereIn($this->query->qualifyColumn($this->relatedKey), $this->parent->{$this->arrayField});
 
         }
